@@ -1,23 +1,28 @@
 package stepDefinition;
 
+import java.io.File;
+import java.io.IOException;
+import java.time.Duration;
+ 
+import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.io.FileHandler;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
 
-import java.io.File;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.time.Duration;
 
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
@@ -27,7 +32,7 @@ public class SearchDDT {
 	String driverPath ="C:\\eclipse workspace\\eclipse_Workspace_3\\RLL_Search_Add_To_Cart\\src\\test\\resources\\drivers\\windows\\chromedriver.exe";
 	String siteUrl = "https://www.firstcry.com";
 	WebElement searchBox,searchButton;
-	WebDriver driver;
+	static WebDriver driver;
 	WebDriverWait wait;
 
 	// create xlsx reference
@@ -76,7 +81,7 @@ public class SearchDDT {
 				searchButton=driver.findElement(By.xpath("/html/body/div[1]/div[5]/div/div[2]/form/span"));
 				searchButton.click();
 				Thread.sleep(4000);
-
+				takeScreenShot("search-excel1.png");
 				driver.findElement(By.id("search_box")).clear();
 				
 				
@@ -106,5 +111,19 @@ public class SearchDDT {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+	public static void takeScreenShot(String fileName) {
+		// 1. type cast driver instance too take screen shot
+		TakesScreenshot tsc = (TakesScreenshot) driver ;
+		
+		// 2. call take screen shot method with file type
+		File src = tsc.getScreenshotAs(OutputType.FILE);
+		
+		// 3. create  file  with screen shot
+		try {
+			FileHandler.copy(src, new File("screenshot-output\\"+fileName));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
 	}
 }

@@ -1,11 +1,17 @@
 package stepDefinition;
 
 import java.time.Duration;
-
+import java.io.File;
+import java.io.IOException;
+ 
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.io.FileHandler;
 import org.openqa.selenium.support.PageFactory;
 
 import io.cucumber.java.en.Given;
@@ -18,7 +24,7 @@ public class FilterCartSteps {
 	String siteUrl = "https://www.firstcry.com";
 	WebElement searchBox;
 	FilterCartPage a;
-	WebDriver driver;
+	static WebDriver driver;
 	
 	@Given("Open the ChromeBrowser and launch application")
 	public void open_the_chrome_browser_and_launch_application() {
@@ -52,6 +58,7 @@ public class FilterCartSteps {
 		a.clickSelectedDiscountFilter();
 		a.clickSelectedBrands();
 		Thread.sleep(8000);
+		takeScreenShot("filters-advancesearch.png");
 	}
 
 	@When("select a product and add to cart")
@@ -59,5 +66,19 @@ public class FilterCartSteps {
 		a.ClickSelectedToy();
 		a.addToCartSelectedToy();
 		Thread.sleep(8000);
+	}
+	public static void takeScreenShot(String fileName) {
+		// 1. type cast driver instance too take screen shot
+		TakesScreenshot tsc = (TakesScreenshot) driver ;
+		
+		// 2. call take screen shot method with file type
+		File src = tsc.getScreenshotAs(OutputType.FILE);
+		
+		// 3. create  file  with screen shot
+		try {
+			FileHandler.copy(src, new File("screenshot-output\\"+fileName));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
 	}
 }
